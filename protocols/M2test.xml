@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+
+#########################################################################
+ iDynoMiCS: individual-based Dynamics of Microbial Communities Simulator
+#########################################################################-->
+<idynomics>
+  <!--#####################################################################
+    SIMULATOR SECTION
+  ######################################################################-->
+  <simulator>
+    <param name="restartPreviousRun">false</param>
+    <param name="randomSeed">12</param>
+
+    <param name="outputPeriod" unit="hour">10</param>
+    <timeStep>
+      <param name="adaptive">false</param>
+      <param name="timeStepIni" unit="hour">1</param>
+      <param name="timeStepMin" unit="hour">1</param>
+      <param name="timeStepMax" unit="hour">1</param>
+      <param name="endOfSimulation" unit="hour">300</param>
+    </timeStep>
+    
+    <!-- The AGENTTIMESTEP which should always be EQUAL or LOWER than the global time step -->
+    <param name="agentTimeStep" unit="hour">1</param>
+  </simulator>
+  <!--#####################################################################
+    INPUT SECTION
+  ######################################################################-->
+  <input>
+    <param name="useAgentFile">false</param>
+    <param name="inputAgentFileURL">agent_State(last).xml</param>
+    <param name="useBulkFile">false</param>
+    <param name="inputBulkFileURL">env_Sum(last).xml</param>
+  </input>
+  <!--#####################################################################
+    SOLUTES AND BIOMASS TYPES SECTION
+  ######################################################################-->
+  <solute domain="Granule" name="Attract">
+    <param name="diffusivity" unit="m2.day-1">1e-1</param>
+    <param name="airDiffusivity" unit="m2.day-1">1e-1</param>
+    <param name="concentration" unit="g.L-1">0</param>
+    <param name="writeOutput">true</param>
+  </solute>
+  <solute domain="Granule" name="pressure">
+    <param name="diffusivity" unit="m2.day-1">1</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+  
+  <solute domain="Granule" name="Lactate">
+    <param name="diffusivity" unit="m2.day-1">9.07e-5</param>
+    <!--higher in biomass than in liquid-->
+    
+    <param name="writeOutput">true</param>
+    <!-- <param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+  
+  <solute domain="Granule" name="Acetate">
+    <param name="diffusivity" unit="m2.day-1">1.05e-4</param>
+    <!-- <param name="airDiffusivity" unit="m2.day-1">1.05e-4</param> -->
+    <!--higher in biomass than in liquid-->
+    
+    <param name="writeOutput">true</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+  <particle name="biomass">
+    <param name="density" unit="g.L-1">150</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </particle>
+  <particle name="inert">
+    <param name="density" unit="g.L-1">150</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </particle>
+  <particle name="capsule">
+    <param name="density" unit="g.L-1">78</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </particle>
+  <!--#####################################################################
+    WORLD SECTION
+  ######################################################################-->
+  <world>
+    <bulk name="MyTank">
+      <param name="isConstant">false</param>
+      <!--<param name= "D" unit= "h-1">0.05</param>-->
+      <solute name="Lactate">
+        <param name="isConstant">false</param>
+        <param name="Sbulk" unit="g.L-1">2.5</param>
+      </solute>
+      <solute name="Attract">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param> 
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+  
+     <!--  <solute name="Lactate">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute> -->
+      <solute name="Acetate">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+     
+    </bulk>
+    <computationDomain name="Granule">
+      <grid nDim="2" nI="127" nJ="127" nK="1"/>
+      <param name="resolution" unit="um">4</param>
+      <param name="boundaryLayer" unit="um">0</param>
+      <param name="biofilmDiffusivity">0.3</param>
+      <param name="specificArea" unit="m2.m-3">80</param>
+      <boundaryCondition class="BoundaryBulk" name="y0z">
+        <param name="activeForSolute">yes</param>
+        <param detail="Lactate" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="-1" y="0" z="0"/>
+          <param name="vectorOut" x="-1" y="0" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="yNz">
+<param name="activeForSolute">yes</param>
+        <param detail="Lactate" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="127" y="0" z="0"/>
+          <param name="vectorOut" x="1" y="0" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="x0z">
+<param name="activeForSolute">yes</param>
+        <param detail="Lactate" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="-1" z="0"/>
+          <param name="vectorOut" x="0" y="-1" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="xNz">
+<param name="activeForSolute">yes</param>
+        <param detail="Lactate" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="127" z="0"/>
+          <param name="vectorOut" x="0" y="1" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryZeroFlux" name="x0y">
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="0" z="-1"/>
+          <param name="vectorOut" x="0" y="0" z="-1"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryZeroFlux" name="x0y">
+
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="0" z="1"/>
+          <param name="vectorOut" x="0" y="0" z="1"/>
+        </shape>
+      </boundaryCondition>
+    </computationDomain>
+  </world>
+
+
+  <!--#####################################################################
+    REACTION SECTION
+  ######################################################################-->
+
+  
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="LactateDegradation">
+    <param name="muMax" unit="h-1">0.144</param>
+    <kineticFactor class="MonodKinetic" solute="Lactate">
+      <param name="Ks" unit="g.L-1">0.03</param>
+    </kineticFactor>
+    <yield>
+      <param name="Lactate" unit="g.g-1">-1</param>
+      <param name="biomass" unit="g.g-1">0.06</param>
+      <param name="Acetate" unit="g.g-1">0.98</param>
+    </yield>
+  </reaction>
+  
+
+
+  <!--#####################################################################
+    SOLVER SECTION
+  ######################################################################-->
+  <solver class="SolverSimple" domain="Granule" name="solutes">
+    <param name="active">true</param>
+    <param name="preStep">40</param>
+    <param name="postStep">40</param>
+    <param name="coarseStep">1500</param>
+    <param name="nCycles">5</param>
+    <reaction name="LactateDegradation"/>
+
+  </solver>
+  <!-- <solver class="Solver_pressure" name="pressure" domain="Granule"><param name="active">true</param></solver> -->
+  <!--#####################################################################
+    AGENT GRID SECTION
+  ######################################################################-->
+  <agentGrid>
+    <param name="computationDomain">Granule</param>
+    <param name="resolution" unit="um">4</param>
+  <!--   <detachment class="DS_Quadratic">
+      <param name="kDet" unit="um-1.hour-1.">4e-5</param>
+      <param name="maxTh" unit="um">600</param>
+   </detachment> -->
+
+ <!--       <detachment class="DS_Biomass"><param name="kDet" unit="fg.um-4.hour-1.">2e-4</param><param name="maxTh" unit="um">100</param></detachment><param name="sloughDetachedBiomass">true</param> -->
+    <param name="MaximumGranuleRadius">200</param>
+ <!-- unit=grid units -->
+    <param name="sloughDetachedBiomass">false</param>
+    <param name="shovingMaxNodes">2e6</param>
+    <param name="shovingFraction">1</param>
+    <param name="shovingMaxIter">50</param>
+    <param name="shovingMutual">true</param>
+  </agentGrid>
+  <!--#####################################################################
+    SPECIES SECTION
+  ######################################################################-->
+
+  <!--#####################################################################
+    GDyingC2 SECTION
+  ######################################################################-->
+  <species class="Yeast" name="GDyingC2">
+    <particle name="biomass">
+        <param name="mass" unit="fg">300</param>
+    </particle>
+    <particle name="inert">
+        <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">black</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">10000</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <entryConditions>
+        <entryCondition name="Lactate" type="solute">
+            <param name="fromSpecies">Clostridium2</param>
+            <param name="switch">lessThan</param>
+            <param name="concentration" unit="g.L-1">0.001</param>
+        </entryCondition>
+    </entryConditions>
+   
+</species>
+
+  
+  <!--#####################################################################
+    Clostridium2
+  ######################################################################-->
+  <species class="Yeast" name="Clostridium2">
+    <particle name="biomass">
+      <param name="mass" unit="fg">500</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+
+    <param name="color">red</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0.0</param>
+    <param name="shovingMutual">true</param>
+    
+    <reaction name="LactateDegradation" status="active"/>  
+    <adhesions>
+        <adhesion strength="0" withSpecies="GdyingC2"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+    </adhesions>
+    <switchingLags>
+       <switchingLag toSpecies="GDyingC2" unit="hour" value="48"/> 
+    </switchingLags>
+    <initArea number="250">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="220" y="220" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+
+  
+</idynomics>

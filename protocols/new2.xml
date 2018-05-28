@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--
+
+#########################################################################
+ iDynoMiCS: individual-based Dynamics of Microbial Communities Simulator
+#########################################################################-->
+<idynomics>
+  <!--#####################################################################
+    SIMULATOR SECTION
+  ######################################################################-->
+  <simulator>
+    <param name="restartPreviousRun">false</param>
+    <param name="randomSeed">12</param>
+    <param name="outputPeriod" unit="hour">24</param>
+    <timeStep>
+      <param name="adaptive">false</param>
+      <param name="timeStepIni" unit="hour">1</param>
+      <param name="timeStepMin" unit="hour">1</param>
+      <param name="timeStepMax" unit="hour">1</param>
+      <param name="endOfSimulation" unit="hour">1400</param>
+    </timeStep>
+    
+    <!-- The AGENTTIMESTEP which should always be EQUAL or LOWER than the global time step -->
+    <param name="agentTimeStep" unit="hour">1</param>
+  </simulator>
+  <!--#####################################################################
+    INPUT SECTION
+  ######################################################################-->
+  <input>
+    <param name="useAgentFile">false</param>
+    <param name="inputAgentFileURL">agent_State(1475).xml</param>
+    <param name="useBulkFile">false</param>
+    <param name="inputBulkFileURL">env_Sum(last).xml</param>
+    <param name="useSoluteFile">false</param>
+    <param name="inputSoluteFileURL">env_State(1475) - 1.0.xml</param>
+  </input>
+  <!--#####################################################################
+    SOLUTES AND BIOMASS TYPES SECTION
+  ######################################################################-->
+  <solute domain="Granule" name="Attract">
+    <param name="diffusivity" unit="m2.day-1">1e-1</param>
+    <param name="airDiffusivity" unit="m2.day-1">1e-1</param>
+    <param name="concentration" unit="g.L-1">0</param>
+    <param name="writeOutput">true</param>
+  </solute>
+  <solute domain="Granule" name="pressure">
+    <param name="diffusivity" unit="m2.day-1">1</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+  
+  <solute domain="Granule" name="Cellobiose">
+    <param name="diffusivity" unit="m2.day-1">5.1e-6</param>
+    <!--higher in biomass than in liquid-->
+    <param name="airDiffusivity" unit="m2.day-1">5.1e-6</param>
+    <param name="writeOutput">true</param>
+    <!--<param name="concentration" unit="g.L-8">0</param>-->
+  </solute>
+
+  <solute domain="Granule" name="Lactate">
+    <param name="diffusivity" unit="m2.day-1">9.07e-5</param>
+    <!--higher in biomass than in liquid-->
+    
+    <param name="writeOutput">true</param>
+    <!-- <param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+  <solute domain="Granule" name="Methane">
+    <param name="diffusivity" unit="m2.day-1">1.29e-4</param>
+
+    
+    <param name="writeOutput">true</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+  <solute domain="Granule" name="Acetate">
+    <param name="diffusivity" unit="m2.day-1">1.05e-4</param>
+    <!-- <param name="airDiffusivity" unit="m2.day-1">1.05e-4</param> -->
+    <!--higher in biomass than in liquid-->
+    
+    <param name="writeOutput">true</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+
+  <solute domain="Granule" name="Ethanol">
+    <param name="diffusivity" unit="m2.day-1">7.25e-5</param>
+    <param name="writeOutput">true</param>
+      <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+
+   <solute domain="Granule" name="Hydrogen">
+    <param name="diffusivity" unit="m2.day-1">3.89e-4</param>
+    <!-- <param name="airDiffusivity" unit="m2.day-1">1.05e-4</param> -->
+    <!--higher in biomass than in liquid-->
+    
+    <param name="writeOutput">true</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </solute>
+
+  <particle name="biomass">
+    <param name="density" unit="g.L-1">150</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </particle>
+  <particle name="inert">
+    <param name="density" unit="g.L-1">150</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </particle>
+  <particle name="capsule">
+    <param name="density" unit="g.L-1">78</param>
+    <!--<param name="concentration" unit="g.L-1">0</param>-->
+  </particle>
+  <!--#####################################################################
+    WORLD SECTION
+  ######################################################################-->
+ <world>
+    <bulk name="MyTank">
+      <param name="isConstant">false</param>
+     <!--  <param name= "D" unit= "h-1">0.0001</param> -->
+      <solute name="Cellobiose">
+        <param name="isConstant">false</param>
+        <param name="Sbulk" unit="g.L-1">2.5</param>
+      </solute>
+     <solute name="Attract">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+      <solute name="Methane">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+      <solute name="Lactate">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+      <solute name="Acetate">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+      <solute name="Ethanol">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+      <solute name="Hydrogen">
+        <param name="isConstant">true</param>
+        <param name="Sbulk" unit="g.L-1">0</param>
+        <param name="Sin" unit="g.L-1">0</param>
+        <param name="Spulse" unit="g.L-1">0</param>
+        <param name="pulseRate" unit="h-1">0</param>
+      </solute>
+    </bulk>
+    <computationDomain name="Granule">
+      <grid nDim="2" nI="127" nJ="127" nK="1"/>
+      <param name="resolution" unit="um">4</param>
+      <param name="boundaryLayer" unit="um">0</param>
+      <param name="biofilmDiffusivity">0.3</param>
+      <param name="specificArea" unit="m2.m-3">80</param>
+      <boundaryCondition class="BoundaryBulk" name="y0z">
+        <param name="activeForSolute">yes</param>
+       
+        <param detail="Cellobiose" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="-1" y="0" z="0"/>
+          <param name="vectorOut" x="-1" y="0" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="yNz">
+<param name="activeForSolute">yes</param>
+       
+        <param detail="Cellobiose" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="127" y="0" z="0"/>
+          <param name="vectorOut" x="1" y="0" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="x0z">
+<param name="activeForSolute">yes</param>
+       
+        <param detail="Cellobiose" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="-1" z="0"/>
+          <param name="vectorOut" x="0" y="-1" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryBulk" name="xNz">
+<param name="activeForSolute">yes</param>
+      
+        <param detail="Cellobiose" name="isPermeableTo">true</param>
+        <param name="bulk">MyTank</param>
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="127" z="0"/>
+          <param name="vectorOut" x="0" y="1" z="0"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryZeroFlux" name="x0y">
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="0" z="-1"/>
+          <param name="vectorOut" x="0" y="0" z="-1"/>
+        </shape>
+      </boundaryCondition>
+      <boundaryCondition class="BoundaryZeroFlux" name="x0y">
+
+        <shape class="Planar">
+          <param name="pointIn" x="0" y="0" z="1"/>
+          <param name="vectorOut" x="0" y="0" z="1"/>
+        </shape>
+      </boundaryCondition>
+    </computationDomain>
+  </world>
+
+  <!--#####################################################################
+    REACTION SECTION
+  ######################################################################-->
+ <reaction catalyzedBy="biomass" class="ReactionFactor" name="CellobioseDegradation">
+    <param name="muMax" unit="h-1">0.15</param>
+    <kineticFactor class="MonodKinetic" solute="Cellobiose">
+      <param name="Ks" unit="g.L-1">2.5</param>
+    </kineticFactor>
+    <!-- <kineticFactor class="SimpleInhibition" solute="Acetate"> CellobioseDegradation
+      <param name="Ki" unit="g.L-1">0.0</param>
+    </kineticFactor> -->
+    <yield>
+      <param name="Cellobiose" unit="g.g-1">-1</param>
+      <param name="biomass" unit="g.g-1">0.203</param>
+      <param name="Lactate" unit="g.g-1">0.0096</param>
+      <param name="Acetate" unit="g.g-1">0.45</param>
+      <param name="Ethanol" unit="g.g-1">0.28</param>
+    </yield>
+  </reaction>
+  
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="LactateDegradation">
+    <param name="muMax" unit="h-1">0.144</param>
+    <kineticFactor class="MonodKinetic" solute="Lactate">
+      <param name="Ks" unit="g.L-1">0.03</param>
+    </kineticFactor>
+    <yield>
+      <param name="Lactate" unit="g.g-1">-1</param>
+      <param name="biomass" unit="g.g-1">0.06</param>
+      <param name="Acetate" unit="g.g-1">0.98</param>
+    </yield>
+  </reaction>
+  
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="AcetateDegradation">
+    <param name="muMax" unit="h-1">0.1</param>
+    <kineticFactor class="HaldaneKinetic" solute="Acetate">
+      <param name="Ks" unit="g.L-1">0.005</param>
+      <param name="Ki" unit="g.L-1">0.24</param>
+    </kineticFactor>
+    <yield>
+      <param name="Acetate" unit="g.g-1">-1</param>
+      <param name="biomass" unit="g.g-1">0.15</param>
+      <param name="Methane" unit="g.g-1">0.26</param>
+      <param name="capsule" unit="g.g-1">0.08</param>
+    </yield>
+  </reaction>
+
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="EthanolDegradation">
+    <param name="muMax" unit="h-1">0.125</param>
+    <kineticFactor class="HaldaneKinetic" solute="Ethanol">
+      <param name="Ks" unit="g.L-1">0.00045</param>
+      <param name="Ki" unit="g.L-1">80.5</param>
+    </kineticFactor>
+    <kineticFactor class="SimpleInhibition" solute="Acetate">
+      <param name="Ki" unit="g.L-1">7.2</param>
+    </kineticFactor>
+    <yield>
+      <param name="Ethanol" unit="g.g-1">-1</param>
+      <param name="biomass" unit="g.g-1">0.22</param>
+      <param name="Hydrogen" unit="g.g-1">0.17</param>
+      <param name="Acetate" unit="g.g-1">1.3</param>
+    </yield>
+  </reaction>
+
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="HydrogenDegradation">
+    <param name="muMax" unit="h-1">0.02</param>
+ <kineticFactor class="MonodKinetic" solute="Hydrogen">
+      <param name="Ks" unit="g.L-1">0.000018</param>
+    </kineticFactor>
+    <yield>
+      <param name="Hydrogen" unit="g.g-1">-1</param>
+      <param name="biomass" unit="g.g-1">0.1</param>
+      <param name="Methane" unit="g.g-1">2</param>
+    </yield>
+  </reaction>  
+
+  <reaction catalyzedBy="biomass" class="ReactionFactor" name="AttractSecretion">
+    <param name="muMax" unit="hour-1">0.03</param>
+    <kineticFactor class="FirstOrderKinetic"/>
+    <yield>
+      <param name="Attract" unit="g.g-1">0.05</param>
+    </yield>
+  </reaction>
+
+
+  <!--#####################################################################
+    SOLVER SECTION
+  ######################################################################-->
+  <solver class="SolverSimple" domain="Granule" name="solutes">
+    <param name="active">true</param>
+    <param name="preStep">40</param>
+    <param name="postStep">40</param>
+    <param name="coarseStep">1500</param>
+    <param name="nCycles">5</param>
+    <reaction name="CellobioseDegradation"/>
+    <reaction name="LactateDegradation"/>
+    <reaction name="AcetateDegradation"/>
+    <reaction name="EthanolDegradation"/>
+    <reaction name="HydrogenDegradation"/>
+    <reaction name="AttractSecretion"/>
+  </solver>
+  <!-- <solver class="Solver_pressure" name="pressure" domain="Granule"><param name="active">true</param></solver> -->
+  <!--#####################################################################
+    AGENT GRID SECTION
+  ######################################################################-->
+  <agentGrid>
+    <param name="computationDomain">Granule</param>
+    <param name="resolution" unit="um">4</param>
+    <detachment class="DS_Quadratic">
+      <param name="kDet" unit="um-1.hour-1.">4e-5</param>
+      <param name="maxTh" unit="um">100000</param>
+   </detachment>
+
+ <!--       <detachment class="DS_Biomass"><param name="kDet" unit="fg.um-4.hour-1.">2e-4</param><param name="maxTh" unit="um">100</param></detachment><param name="sloughDetachedBiomass">true</param> -->
+    <param name="MaximumGranuleRadius">180</param>
+ <!-- unit=grid units -->
+    <param name="sloughDetachedBiomass">true</param>
+    <param name="shovingMaxNodes">2e6</param>
+    <param name="shovingFraction">1</param>
+    <param name="shovingMaxIter">50</param>
+    <param name="shovingMutual">true</param>
+  </agentGrid>
+  <!--#####################################################################
+    SPECIES SECTION
+  ######################################################################-->
+  
+  <!--#####################################################################
+    GDyingC1 SECTION
+  ######################################################################-->
+  <species class="Yeast" name="GDyingC1">
+    <particle name="biomass">
+        <param name="mass" unit="fg">300</param>
+    </particle>
+    <particle name="inert">
+        <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">black</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">10000</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="agitationCV">0.2</param> -->
+    <reaction name="Death" status="active" />
+
+    <entryConditions>
+        <entryCondition name="Cellobiose" type="solute">
+            <param name="fromSpecies">Clostridium1</param>
+            <param name="switch">lessThan</param>
+            <param name="concentration" unit="g.L-1">0.02</param>
+        </entryCondition>
+    </entryConditions>
+</species>
+  <!--#####################################################################
+    GDyingC2 SECTION
+  ######################################################################-->
+  <species class="Yeast" name="GDyingC2">
+    <particle name="biomass">
+        <param name="mass" unit="fg">300</param>
+    </particle>
+    <particle name="inert">
+        <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">black</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">10000</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="agitationCV">0.2</param> -->
+    <reaction name="Death" status="active" />
+    <entryConditions>
+        <entryCondition name="Lactate" type="solute">
+            <param name="fromSpecies">Clostridium2</param>
+            <param name="switch">lessThan</param>
+            <param name="concentration" unit="g.L-1">0.00001</param>
+        </entryCondition>
+    </entryConditions>
+   
+</species>
+
+  <!--#####################################################################
+    GDyingD1 SECTION
+  ######################################################################-->
+  <species class="Yeast" name="GDyingD1">
+    <particle name="biomass">
+        <param name="mass" unit="fg">300</param>
+    </particle>
+    <particle name="inert">
+        <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">black</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">10000</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="agitationCV">0.2</param> -->
+    <reaction name="Death" status="active" />
+    <entryConditions>
+        <entryCondition name="Ethanol" type="solute">
+            <param name="fromSpecies">Desulfovibrio</param>
+            <param name="switch">lessThan</param>
+            <param name="concentration" unit="g.L-1">0.00001</param>
+        </entryCondition>
+    </entryConditions>
+</species>
+  <!--#####################################################################
+    GDyingM1 SECTION
+  ######################################################################-->
+  <species class="Yeast" name="GDyingM1">
+    <particle name="biomass">
+        <param name="mass" unit="fg">300</param>
+    </particle>
+    <particle name="inert">
+        <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">black</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">10000</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="agitationCV">0.2</param> -->
+    <reaction name="Death" status="active" />
+    <entryConditions>
+        <entryCondition name="Acetate" type="solute">
+            <param name="fromSpecies">Methanogen1</param>
+            <param name="switch">lessThan</param>
+            <param name="concentration" unit="g.L-1">0.00001</param>
+        </entryCondition>
+    </entryConditions>
+   
+   
+</species>
+
+<!--#####################################################################
+    GDyingM2 SECTION
+  ######################################################################-->
+  <species class="Yeast" name="GDyingM2">
+    <particle name="biomass">
+        <param name="mass" unit="fg">300</param>
+    </particle>
+    <particle name="inert">
+        <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">black</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">10000</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="agitationCV">0.2</param> -->
+    <reaction name="Death" status="active" />
+    <entryConditions>
+        <entryCondition name="Hydrogen" type="solute">
+            <param name="fromSpecies">Methanogen2</param>
+            <param name="switch">lessThan</param>
+            <param name="concentration" unit="g.L-1">0.000001</param>
+        </entryCondition>
+    </entryConditions>
+   
+</species>
+
+<!--#####################################################################
+    Clostridium1
+  ######################################################################-->
+  <species class="Yeast" name="Clostridium1">
+    <particle name="biomass">
+      <param name="mass" unit="fg">500</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">green</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0.0</param>
+    <param name="shovingMutual">true</param>
+
+    
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <!-- <reaction name="CellobioseDegradation" status="active"/> -->
+  
+      <adhesions>
+        <adhesion strength="1" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GdyingC1"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="1" withSpecies="Desulfovibrio"/>
+      </adhesions>
+    <switchingLags>
+      <switchingLag toSpecies="GDyingC1" unit="hour" value="96"/> 
+    </switchingLags>  
+    <initArea number="0">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="220" y="220" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+<!--#####################################################################
+    Clostridium2
+  ######################################################################-->
+  <species class="Yeast" name="Clostridium2">
+    <particle name="biomass">
+      <param name="mass" unit="fg">500</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">red</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0.0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <reaction name="LactateDegradation" status="active"/>
+       <adhesions>
+        <adhesion strength="1" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GdyingC2"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="1" withSpecies="Desulfovibrio"/>
+      </adhesions>
+    <switchingLags>
+       <switchingLag toSpecies="GDyingC2" unit="hour" value="118"/> 
+    </switchingLags>
+    <initArea number="250">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="248" y="248" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+
+  <!--#####################################################################
+    Methanogen1
+  ######################################################################-->
+  <species class="Yeast" name="Methanogen1">
+    <particle name="biomass">
+      <param name="mass" unit="fg">1000</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">blue</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <param name="kHyd" unit="hr-1">0.07</param>
+    <reaction name="AcetateDegradation" status="active"/>
+    <reaction name="AttractSecretion" status="active"/>
+     <switchingLags>
+       <switchingLag toSpecies="GDyingM1" unit="hour" value="72"/>
+    </switchingLags>
+      <adhesions>
+        <adhesion strength="2" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingM1"/>
+        <adhesion strength="2" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="2" withSpecies="Desulfovibrio"/>
+      </adhesions>
+    <initArea number="200">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="248" y="248" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+
+  <!--#####################################################################
+   Desulfovibrio
+  ######################################################################-->
+  <species class="Yeast" name="Desulfovibrio">
+    <particle name="biomass">
+      <param name="mass" unit="fg">500</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">yellow</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0.001</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <reaction name="AttractSecretion" status="active"/>
+    <reaction name="EthanolDegradation" status="active"/>
+     <switchingLags>
+       <switchingLag toSpecies="GDyingD1" unit="hour" value="96"/> 
+    </switchingLags>
+      <adhesions>
+        <adhesion strength="1" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingD1"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="1" withSpecies="Desulfovibrio"/>
+      </adhesions>
+    <initArea number="50">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="248" y="248" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+
+
+  <!--#####################################################################
+    Methanogen2
+  ######################################################################-->
+  <species class="Yeast" name="Methanogen2">
+    <particle name="biomass">
+      <param name="mass" unit="fg">1000</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">blue</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">3</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="kHyd" unit="hr-1">0.07</param>
+    <reaction name="HydrogenDegradation" status="active"/>
+    <reaction name="AttractSecretion" status="active"/>
+     <switchingLags>
+       <switchingLag toSpecies="GDyingM2" unit="hour" value="72"/>
+    </switchingLags>
+      <adhesions>
+        <adhesion strength="2" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingM1"/>
+        <adhesion strength="2" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="2" withSpecies="Desulfovibrio"/>
+      </adhesions>
+    <initArea number="200">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="248" y="248" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+</idynomics>

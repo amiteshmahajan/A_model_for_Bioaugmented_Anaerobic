@@ -1,0 +1,289 @@
+
+  <!--#####################################################################
+    Clostridium1
+  ######################################################################-->
+  <species class="Yeast" name="Clostridium1">
+    <particle name="biomass">
+      <param name="mass" unit="fg">500</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+    <param name="color">green</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0.0</param>
+    <param name="shovingMutual">true</param>
+
+    
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <!-- <reaction name="CellobioseDegradation" status="active"/> -->
+  
+      <adhesions>
+        <adhesion strength="1" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GdyingC1"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="1" withSpecies="Desulfovibrio"/>
+        <adhesion strength="1" withSpecies="OleateDegrader"/>
+      </adhesions>
+    <switchingLags>
+      <switchingLag toSpecies="GDyingC1" unit="hour" value="96"/> 
+    </switchingLags>  
+    <initArea number="0">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="220" y="220" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+  <!--#####################################################################
+    Clostridium2
+  ######################################################################-->
+  <species class="Yeast" name="Clostridium2">
+    <particle name="biomass">
+      <param name="mass" unit="fg">500</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">0</param>
+    </particle>
+
+    <param name="color">red</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0.0</param>
+    <param name="shovingMutual">true</param>
+    
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <reaction name="LactateDegradation" status="active"/>
+    
+       <adhesions>
+        <adhesion strength="1" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GdyingC2"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="1" withSpecies="Desulfovibrio"/>
+        <adhesion strength="1" withSpecies="OleateDegrader"/>
+      </adhesions>
+    <switchingLags>
+       <switchingLag toSpecies="GDyingC2" unit="hour" value="118"/> 
+    </switchingLags>
+    <initArea number="0">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="220" y="220" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+
+  <!--#####################################################################
+    Methanogen1
+  ######################################################################-->
+  <species class="Yeast" name="Methanogen1">
+    <particle name="biomass">
+      <param name="mass" unit="fg">1000</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">blue</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    <param name="shovingMutual">true</param>
+    
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <param name="epsMax">0.1</param>
+    <param name="kHyd" unit="hr-1">0.07</param>
+    <reaction name="AcetateDegradation" status="active"/>
+    <reaction name="AttractSecretion" status="active"/>
+      
+    <switchingLags>
+     <switchingLag toSpecies="GDyingM1" unit="hour" value="72"/>
+    </switchingLags>
+    <tightJunctions>
+      <tightJunction stiffness="1" withSpecies="Clostridium1"/>
+      <tightJunction stiffness="1" withSpecies="Clostridium2"/>
+      <tightJunction stiffness="1" withSpecies="Methanogen2"/>
+      <tightJunction stiffness="1" withSpecies="GdyingC1"/>
+      <tightJunction stiffness="1" withSpecies="GdyingC2"/>
+      <tightJunction stiffness="1" withSpecies="GDyingM1"/>
+      <tightJunction stiffness="1" withSpecies="GDyingM2"/>
+      <tightJunction stiffness="1" withSpecies="Desulfovibrio"/>
+
+    </tightJunctions>
+      <adhesions>
+        <adhesion strength="2" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingM1"/>
+        <adhesion strength="2" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="2" withSpecies="Desulfovibrio"/>
+        <adhesion strength="3" withSpecies="OleateDegrader"/>
+      </adhesions>
+    <initArea number="00">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="215" y="215" z="0"/>
+      <coordinates x="252" y="252" z="0"/>
+    </initArea>
+  </species>
+  <!--#####################################################################
+   Desulfovibrio
+  ######################################################################-->
+  <species class="Yeast" name="Desulfovibrio">
+    <particle name="biomass">
+      <param name="mass" unit="fg">1000</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">yellow</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">2</param>
+    <param name="deathRadius" unit="um">0.001</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+    <reaction name="AttractSecretion" status="active"/>
+    <reaction name="EthanolDegradation" status="active"/>
+   
+     
+     <switchingLags>
+       <switchingLag toSpecies="GDyingD1" unit="hour" value="96"/> 
+    </switchingLags>
+      <adhesions>
+        <adhesion strength="1" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingD1"/>
+        <adhesion strength="1" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="1" withSpecies="Desulfovibrio"/>
+        <adhesion strength="0" withSpecies="OleateDegrader"/>
+      </adhesions>
+    <initArea number="00">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="220" y="220" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+  </species>
+
+
+  <!--#####################################################################
+    Methanogen2
+  ######################################################################-->
+  <species class="Yeast" name="Methanogen2">
+    <particle name="biomass">
+      <param name="mass" unit="fg">1000</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">blue</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">3</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+   <param name="epsMax">0.1</param>
+    <param name="kHyd" unit="hr-1">0.07</param>
+    <reaction name="HydrogenDegradation" status="active"/>
+    <reaction name="AttractSecretion" status="active"/>
+ 
+    <switchingLags>
+       <switchingLag toSpecies="GDyingM2" unit="hour" value="72"/>
+    </switchingLags>
+      <adhesions>
+        <adhesion strength="2" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingM1"/>
+        <adhesion strength="2" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="2" withSpecies="Desulfovibrio"/>
+        <adhesion strength="2" withSpecies="OleateDegrader"/>
+      </adhesions>
+    <initArea number="0">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="220" y="220" z="0"/>
+      <coordinates x="250" y="250" z="0"/>
+    </initArea>
+
+  </species>
+
+  <!--#####################################################################
+    OleateDegrader
+  ######################################################################-->
+  <species class="Yeast" name="OleateDegrader">
+    <particle name="biomass">
+      <param name="mass" unit="fg">1000</param>
+    </particle>
+    <particle name="inert">
+      <param name="mass" unit="fg">10</param>
+    </particle>
+    <param name="color">red</param>
+    <param name="computationDomain">Granule</param>
+    <param name="divRadius" unit="um">4</param>
+    <param name="deathRadius" unit="um">0</param>
+    <param name="shoveFactor" unit="um">1</param>
+    <param name="shoveLimit" unit="um">0</param>
+    
+    <!-- <param name="divRadiusCV">1</param><param name="deathRadiusCV">1</param><param name="babyMassFracCV">1</param>  -->
+   
+    
+    <reaction name="oleateDegradation" status="active"/>
+    <reaction name="AttractSecretion" status="active"/>
+ 
+     <switchingLags>
+       <switchingLag toSpecies="GDyingO1" unit="hour" value="96"/> 
+    </switchingLags>
+      <adhesions>
+        <adhesion strength="0" withSpecies="Clostridium1"/>
+        <adhesion strength="0" withSpecies="GDyingM1"/>
+        <adhesion strength="0" withSpecies="Clostridium2"/>
+        <adhesion strength="2" withSpecies="Methanogen1"/>
+        <adhesion strength="2" withSpecies="Methanogen2"/>
+        <adhesion strength="0" withSpecies="Desulfovibrio"/>
+        <adhesion strength="2" withSpecies="OleateDegrader"/>
+      </adhesions>
+
+        <initArea number="100">
+      <param name="birthday" unit="hour">0</param>
+      <coordinates x="366" y="247" z="0"/>
+      <coordinates x="378" y="260" z="0"/>
+    </initArea>
+
+    <initArea number="70">
+      <param name="birthday" unit="hour">0</param>
+       <coordinates x="380" y="380" z="0"/>
+      <coordinates x="350" y="350" z="0"/>
+    </initArea>
+
+     <initArea number="70">
+      <param name="birthday" unit="hour">0</param>
+       <coordinates x="380" y="170" z="0"/>
+      <coordinates x="350" y="140" z="0"/>
+    </initArea>
+
+     <initArea number="70">
+      <param name="birthday" unit="hour">0</param>
+       <coordinates x="170" y="390" z="0"/>
+      <coordinates x="140" y="360" z="0"/>
+    </initArea>
+
+     <initArea number="70">
+      <param name="birthday" unit="hour">0</param>
+       <coordinates x="170" y="160" z="0"/>
+      <coordinates x="140" y="130" z="0"/>
+    </initArea>
+
+
+
+
+  </species>
+</idynomics>
